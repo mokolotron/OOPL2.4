@@ -2,6 +2,8 @@
 #include "Bus.h"
 #include <conio.h>
 #include <list>
+#include <stdexcept>
+#include <fstream>
 using namespace std;
 class Dispatcher
 {
@@ -25,7 +27,7 @@ public:
 			Park.remove(*it);
 		}
 		else {
-			cout << "isnt this Bus in the Race" << endl;
+			cout << "isnt this Bus in the Park" << endl;
 		}
 	};
 
@@ -70,14 +72,33 @@ public:
 	}
 
 	void show() {
-		cout << "In Park:" << endl;
+		cout<<endl << "In Park:" << endl;
 		for (Bus& bus : Park)
 			bus.show();
-
-		cout << "In Race:" << endl;
+		
+		cout<<endl << "In Race:" << endl;
 		for (Bus& bus : Race)
 			bus.show();
+		cout << endl << endl;
 	}
 
+	void fill_from_file() {
+		int number, race;
+		string  name ;
+		ifstream File("Input.txt");
+		try {
+			if (!File.is_open()) throw std::runtime_error("Could not open file");
+			while (true) {
+				File >> number >> name >> race;
+				if (File.eof()) break;
+				Bus tbus(number, name, race);
+				Park.push_front(tbus);
+			}
+		}
+		catch (std::exception& ex) {
+			cout << "Error! " << ex.what() << endl;
+		}
+		File.close();
+	}
 };
 
